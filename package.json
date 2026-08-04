@@ -10,15 +10,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.2",
     "prettier": "3.9.6",
+    "prisma": "^4.13.0",
     "tsx": "^4.23.1",
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "express": "^5.2.1"
   }
 }
