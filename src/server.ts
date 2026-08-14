@@ -53,7 +53,7 @@ app.post('/movies', async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).send({ message: 'Falha ao cadatrar o filme' });
+    res.status(500).send({ message: 'Erro interno do servidor' });
   }
 
   res.status(201).send();
@@ -82,7 +82,7 @@ app.put('/movies/:id', async (req, res) => {
       data: data,
     });
   } catch (err) {
-    res.status(500).send({ message: 'Falha ao atualizar o filme' });
+    res.status(500).send({ message: 'Erro interno do servidor' });
   }
 
   res.status(200).send();
@@ -106,7 +106,7 @@ app.delete('/movies/:id', async (req, res) => {
       where: { id },
     });
   } catch (err) {
-    res.status(500).send({ message: 'Não foi possível deletar o filme' });
+    res.status(500).send({ message: 'Erro interno do servidor' });
   }
 
   res.status(200).send();
@@ -132,7 +132,7 @@ app.get('/movies/:genreName', async (req, res) => {
 
     res.status(200).send(movieFilteredByGenreName);
   } catch (err) {
-    res.status(500).send({ message: 'Falha ao filtrar filmes por gênero' });
+    res.status(500).send({ message: 'Erro interno do servidor' });
   }
 });
 
