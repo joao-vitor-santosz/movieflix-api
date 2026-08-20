@@ -7,3 +7,4 @@ package-lock.json
 .windsurf/
 skills-lock.json
 dist/
+data/
