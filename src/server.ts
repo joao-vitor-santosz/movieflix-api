@@ -232,6 +232,34 @@ app.get('/genres', async (req, res) => {
   }
 });
 
+app.delete('/genres/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const genre = await prisma.genre.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!genre) {
+      return res.status(404).send({ message: 'Gênero não encontrado.' });
+    }
+
+    const deleteGenre = await prisma.genre.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    res.status(200).json(deleteGenre);
+  } catch (error) {
+    res.status(500).send({
+      message: 'Falha ao deletar o gênero. Erro interno do servidor',
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });

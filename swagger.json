@@ -175,6 +175,39 @@
             "description": "Falha ao atualizar o gênero. Erro interno do servidor"
           }
         }
+      },
+      "delete": {
+        "tags": ["Genre"],
+        "summary": "Remover um gênero",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do gênero a ser excluído",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gênero removido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Genre"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Gênero não encontrado"
+          },
+          "500": {
+            "description": "Falha ao deletar o gênero. Erro interno do servidor"
+          }
+        }
       }
     },
     "/genres": {
