@@ -63,11 +63,9 @@ app.post('/movies', async (req, res) => {
       },
     });
   } catch (err) {
-    return res
-      .status(500)
-      .send({
-        message: 'Falha ao cadastrar o filme. Erro interno do servidor',
-      });
+    return res.status(500).send({
+      message: 'Falha ao cadastrar o filme. Erro interno do servidor',
+    });
   }
 
   res.status(201).send();
@@ -96,11 +94,9 @@ app.put('/movies/:id', async (req, res) => {
       data: data,
     });
   } catch (err) {
-    return res
-      .status(500)
-      .send({
-        message: 'Falha ao atualizar o filme. Erro interno do servidor',
-      });
+    return res.status(500).send({
+      message: 'Falha ao atualizar o filme. Erro interno do servidor',
+    });
   }
 
   res.status(200).send();
@@ -284,6 +280,37 @@ app.delete('/genres/:id', async (req, res) => {
   }
 });
 
+app.get('/movies/language', async (req, res) => {
+  const { language } = req.query;
+  const languageName = language as string;
+
+  let where = {};
+  if (languageName) {
+    where = {
+      languages: {
+        name: {
+          equals: languageName,
+          mode: 'insensitive',
+        },
+      },
+    };
+  }
+
+  try {
+    const movies = await prisma.movie.findMany({
+      where: where,
+      include: {
+        genres: true,
+        languages: true,
+      },
+    });
+
+    res.json(movies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Houve um problema ao buscar os filmes.' });
+  }
+});
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });

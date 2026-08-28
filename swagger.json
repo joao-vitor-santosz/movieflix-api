@@ -138,6 +138,42 @@
         }
       }
     },
+    "/movies/language": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Retorna filmes por idioma",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "description": "Nome do idioma usado para filtrar os filmes",
+            "schema": {
+              "type": "string"
+            },
+            "example": "English"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filmes filtrados por idioma retornados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Houve um problema ao buscar os filmes"
+          }
+        }
+      }
+    },
     "/genres/{id}": {
       "put": {
         "tags": ["Genre"],
