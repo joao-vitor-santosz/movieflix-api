@@ -128,33 +128,33 @@ app.delete('/movies/:id', async (req, res) => {
   res.status(200).send();
 });
 
-app.get('/movies/sort', async (req, res) => {
-  const { sort } = req.query;
-  console.log(sort);
-  let orderBy: Prisma.MovieOrderByWithRelationInput =
-    sort === 'title'
-      ? {
-          title: 'asc',
-        }
-      : {
-          release_date: 'asc',
-        };
+// app.get('/movies/sort', async (req, res) => {
+//   const { sort } = req.query;
 
-  try {
-    const movies = await prisma.movie.findMany({
-      orderBy,
-      include: {
-        genres: true,
-        languages: true,
-      },
-    });
+//   let orderBy: Prisma.MovieOrderByWithRelationInput =
+//     sort === 'title'
+//       ? {
+//           title: 'asc',
+//         }
+//       : {
+//           release_date: 'asc',
+//         };
 
-    res.json(movies);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: 'Houve um problema ao buscar os filmes.' });
-  }
-});
+//   try {
+//     const movies = await prisma.movie.findMany({
+//       orderBy,
+//       include: {
+//         genres: true,
+//         languages: true,
+//       },
+//     });
+
+//     res.json(movies);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ message: 'Houve um problema ao buscar os filmes.' });
+//   }
+// });
 
 app.put('/genres/:id', async (req, res) => {
   const { id } = req.params;
@@ -280,9 +280,21 @@ app.delete('/genres/:id', async (req, res) => {
   }
 });
 
-app.get('/movies/language', async (req, res) => {
-  const { language } = req.query;
+app.get('/movies/filter', async (req, res) => {
+  const { language, sort } = req.query;
   const languageName = language as string;
+  const sortName = sort as string;
+
+  let orderBy = {};
+  if (sortName === 'title') {
+    orderBy = {
+      title: 'asc',
+    };
+  } else if (sortName === 'release_date') {
+    orderBy = {
+      release_date: 'asc',
+    };
+  }
 
   let where = {};
   if (languageName) {
@@ -298,6 +310,7 @@ app.get('/movies/language', async (req, res) => {
 
   try {
     const movies = await prisma.movie.findMany({
+      orderBy,
       where: where,
       include: {
         genres: true,

@@ -91,11 +91,21 @@
         }
       }
     },
-    "/movies/sort": {
+    "/movies/filter": {
       "get": {
         "tags": ["Movie"],
-        "summary": "Ordenar filmes",
+        "summary": "Filtrar e ordenar filmes",
         "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "description": "Nome do idioma usado para filtrar os filmes",
+            "schema": {
+              "type": "string"
+            },
+            "example": "English"
+          },
           {
             "name": "sort",
             "in": "query",
@@ -103,8 +113,7 @@
             "description": "Campo usado para ordenar os filmes",
             "schema": {
               "type": "string",
-              "enum": ["title", "release_date"],
-              "default": "release_date"
+              "enum": ["title", "release_date"]
             },
             "examples": {
               "porTitulo": {
@@ -120,7 +129,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Filmes ordenados retornados com sucesso",
+            "description": "Filmes filtrados e ordenados retornados com sucesso",
             "content": {
               "application/json": {
                 "schema": {
@@ -134,42 +143,6 @@
           },
           "500": {
             "description": "Erro interno do servidor"
-          }
-        }
-      }
-    },
-    "/movies/language": {
-      "get": {
-        "tags": ["Movie"],
-        "summary": "Retorna filmes por idioma",
-        "parameters": [
-          {
-            "name": "language",
-            "in": "query",
-            "required": false,
-            "description": "Nome do idioma usado para filtrar os filmes",
-            "schema": {
-              "type": "string"
-            },
-            "example": "English"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Filmes filtrados por idioma retornados com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Movie"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Houve um problema ao buscar os filmes"
           }
         }
       }
