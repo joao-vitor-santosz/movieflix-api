@@ -183,6 +183,39 @@ app.put('/genres/:id', async (req, res) => {
   }
 });
 
+app.post('/genres', async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const genreWithSameName = await prisma.genre.findFirst({
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+      },
+    });
+
+    if (genreWithSameName) {
+      return res
+        .status(409)
+        .send({ message: `O gênero ${name} já está cadastrado` });
+    }
+
+    if (typeof name !== 'string' || name.trim() === '') {
+      return res.status(400).send({message: "falha na requisição, gênero vazio"})
+    }
+
+    const newGenre = await prisma.genre.create({
+      data: {
+        name,
+      },
+    });
+    res.status(200).json(newGenre);
+  } catch (error) {
+    res.status(500).send({
+      message: 'Não foi possível cadastrar o gênero. Erro interno do servidor',
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
