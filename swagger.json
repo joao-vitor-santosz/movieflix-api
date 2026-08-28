@@ -125,6 +125,57 @@
           }
         }
       }
+    },
+    "/genres/{id}": {
+      "put": {
+        "tags": ["Genre"],
+        "summary": "Atualizar um gênero",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do gênero a ser atualizado",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenreInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Gênero atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Genre"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "O nome do gênero é obrigatório"
+          },
+          "404": {
+            "description": "Gênero não encontrado"
+          },
+          "409": {
+            "description": "Este nome de gênero já existe"
+          },
+          "500": {
+            "description": "Falha ao atualizar o gênero. Erro interno do servidor"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -215,6 +266,29 @@
             "type": "string",
             "format": "date",
             "description": "Data de lançamento do filme"
+          }
+        }
+      },
+      "Genre": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do gênero"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do gênero"
+          }
+        }
+      },
+      "GenreInput": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do gênero"
           }
         }
       }
