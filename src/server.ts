@@ -200,7 +200,9 @@ app.post('/genres', async (req, res) => {
     }
 
     if (typeof name !== 'string' || name.trim() === '') {
-      return res.status(400).send({message: "falha na requisição, gênero vazio"})
+      return res
+        .status(400)
+        .send({ message: 'falha na requisição, gênero vazio' });
     }
 
     const newGenre = await prisma.genre.create({
@@ -212,6 +214,20 @@ app.post('/genres', async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message: 'Não foi possível cadastrar o gênero. Erro interno do servidor',
+    });
+  }
+});
+
+app.get('/genres', async (req, res) => {
+  try {
+    const fetchGenres = await prisma.genre.findMany({
+      orderBy: { name: 'asc' },
+    });
+
+    res.status(200).send(fetchGenres);
+  } catch (error) {
+    res.status(500).send({
+      message: 'Falha ao buscar os gêneros. Erro interno do servidor',
     });
   }
 });

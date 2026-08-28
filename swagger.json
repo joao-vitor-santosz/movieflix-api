@@ -176,6 +176,30 @@
           }
         }
       }
+    },
+    "/genres": {
+      "get": {
+        "tags": ["Genre"],
+        "summary": "Retorna uma lista de gêneros",
+        "responses": {
+          "200": {
+            "description": "Lista de gêneros retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"array",
+                  "items": {
+                    "$ref": "#/components/schemas/Genre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar os gêneros. Erro interno do servidor"
+          }
+        }
+      }
     }
   },
   "components": {
