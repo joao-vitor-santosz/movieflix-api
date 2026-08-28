@@ -91,24 +91,36 @@
         }
       }
     },
-    "/movies/{genreName}": {
+    "/movies/sort": {
       "get": {
         "tags": ["Movie"],
-        "summary": "Filtrar filmes por gênero",
+        "summary": "Ordenar filmes",
         "parameters": [
           {
-            "name": "genreName",
-            "in": "path",
-            "required": true,
-            "description": "Nome do gênero para filtrar os filmes",
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Campo usado para ordenar os filmes",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["title", "release_date"],
+              "default": "release_date"
+            },
+            "examples": {
+              "porTitulo": {
+                "summary": "Ordenar por título",
+                "value": "title"
+              },
+              "porDataDeLancamento": {
+                "summary": "Ordenar por data de lançamento",
+                "value": "release_date"
+              }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Filmes filtrados por gênero retornados com sucesso",
+            "description": "Filmes ordenados retornados com sucesso",
             "content": {
               "application/json": {
                 "schema": {

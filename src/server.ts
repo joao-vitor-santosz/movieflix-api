@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import { PrismaClient } from './generated/prisma/client.js';
+import { PrismaClient, Prisma } from './generated/prisma/client.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json' with { type: 'json' };
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -26,7 +26,17 @@ app.get('/movies', async (_, res) => {
       languages: true,
     },
   });
-  res.json(movies);
+
+  const totalMovies = movies.length;
+
+  let totalDuration = 0;
+  for (let movie of movies) {
+    totalDuration += movie.duration as number;
+  }
+  const averageDuration =
+    totalMovies > 0 ? Math.round(totalDuration / totalMovies) : 0;
+
+  res.json({ totalMovies, averageDuration, movies });
 });
 
 app.post('/movies', async (req, res) => {
@@ -53,7 +63,11 @@ app.post('/movies', async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).send({ message: 'Erro interno do servidor' });
+    return res
+      .status(500)
+      .send({
+        message: 'Falha ao cadastrar o filme. Erro interno do servidor',
+      });
   }
 
   res.status(201).send();
@@ -82,7 +96,11 @@ app.put('/movies/:id', async (req, res) => {
       data: data,
     });
   } catch (err) {
-    res.status(500).send({ message: 'Erro interno do servidor' });
+    return res
+      .status(500)
+      .send({
+        message: 'Falha ao atualizar o filme. Erro interno do servidor',
+      });
   }
 
   res.status(200).send();
@@ -106,33 +124,39 @@ app.delete('/movies/:id', async (req, res) => {
       where: { id },
     });
   } catch (err) {
-    res.status(500).send({ message: 'Erro interno do servidor' });
+    return res
+      .status(500)
+      .send({ message: 'Falha ao deletar o filme. Erro interno do servidor' });
   }
 
   res.status(200).send();
 });
 
-app.get('/movies/:genreName', async (req, res) => {
-  const genreName = req.params.genreName;
+app.get('/movies/sort', async (req, res) => {
+  const { sort } = req.query;
+  console.log(sort);
+  let orderBy: Prisma.MovieOrderByWithRelationInput =
+    sort === 'title'
+      ? {
+          title: 'asc',
+        }
+      : {
+          release_date: 'asc',
+        };
+
   try {
-    const movieFilteredByGenreName = await prisma.movie.findMany({
+    const movies = await prisma.movie.findMany({
+      orderBy,
       include: {
         genres: true,
         languages: true,
       },
-      where: {
-        genres: {
-          name: {
-            equals: genreName,
-            mode: 'insensitive',
-          },
-        },
-      },
     });
 
-    res.status(200).send(movieFilteredByGenreName);
-  } catch (err) {
-    res.status(500).send({ message: 'Erro interno do servidor' });
+    res.json(movies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Houve um problema ao buscar os filmes.' });
   }
 });
 
